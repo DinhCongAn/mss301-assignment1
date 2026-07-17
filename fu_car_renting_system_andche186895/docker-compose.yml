@@ -1,0 +1,56 @@
+services:
+  customer-db:
+    image: postgres:17-alpine
+    container_name: customer-db
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: customer_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - customer-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U root -d customer_db" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  car-db:
+    image: postgres:17-alpine
+    container_name: car-db
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: car_db
+    ports:
+      - "5434:5432"
+    volumes:
+      - car-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U root -d car_db" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  rental-db:
+    image: postgres:17-alpine
+    container_name: rental-db
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: rental_db
+    ports:
+      - "5435:5432"
+    volumes:
+      - rental-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U root -d rental_db" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  customer-db-data:
+  car-db-data:
+  rental-db-data:
