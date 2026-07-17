@@ -1,10 +1,25 @@
-# Default ignored files
-/shelf/
-/workspace.xml
-# Editor-based HTTP Client requests
-/httpRequests/
-# Ignored default folder with query files
-/queries/
-# Datasource local storage ignored files
-/dataSources/
-/dataSources.local.xml
+# Maven
+**/target/
+
+# IntelliJ
+.idea/
+*.iml
+
+# Eclipse / STS
+.classpath
+.project
+.settings/
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
+logs/
+
+# Environment
+.env
+
+# Operating system
+.DS_Store
+Thumbs.db
