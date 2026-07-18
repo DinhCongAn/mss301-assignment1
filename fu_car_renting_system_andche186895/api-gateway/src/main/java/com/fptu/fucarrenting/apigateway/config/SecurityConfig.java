@@ -53,6 +53,11 @@ public class SecurityConfig {
 
                 .authorizeExchange(authorize -> authorize
 
+                        .pathMatchers(
+                                "/",
+                                "/actuator/health",
+                                "/actuator/info"
+                        ).permitAll()
                         /*
                          * Login và đăng ký không cần JWT.
                          */
