@@ -5,15 +5,6 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-/*
- * name phải trùng với:
- *
- * spring:
- *   application:
- *     name: car-service
- *
- * Eureka sẽ cung cấp địa chỉ thật của Car Service.
- */
 @FeignClient(name = "car-service")
 public interface CarClient {
 

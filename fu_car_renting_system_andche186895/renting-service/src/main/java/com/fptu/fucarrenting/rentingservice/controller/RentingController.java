@@ -70,8 +70,8 @@ public class RentingController {
     /*
      * Admin xem báo cáo theo khoảng ngày.
      *
-     * Trong giai đoạn chưa có API Gateway,
-     * Postman tạm thời truyền X-Role.
+     * API Gateway xác thực JWT và tự động truyền
+     * vai trò người dùng qua header X-Role.
      */
     @GetMapping("/reports")
     public RentingReportResponse getReport(
