@@ -27,14 +27,7 @@ public class IdentityHeaderFilter
             ServerWebExchange exchange,
             GatewayFilterChain chain
     ) {
-        /*
-         * Trước tiên phải xóa các header identity
-         * mà client tự gửi.
-         *
-         * Client không được phép tự khai:
-         * X-Customer-Id: 1
-         * X-Role: ADMIN
-         */
+
         ServerHttpRequest.Builder requestBuilder =
                 createCleanRequestBuilder(exchange);
 

@@ -54,6 +54,20 @@ public class SecurityConfig {
                 .authorizeExchange(authorize -> authorize
 
                         .pathMatchers(
+                                "/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/webjars/**",
+                                "/v3/api-docs",
+                                "/v3/api-docs/**",
+                                "/customer-service/v3/api-docs",
+                                "/customer-service/v3/api-docs/**",
+                                "/car-service/v3/api-docs",
+                                "/car-service/v3/api-docs/**",
+                                "/renting-service/v3/api-docs",
+                                "/renting-service/v3/api-docs/**"
+                        ).permitAll()
+
+                        .pathMatchers(
                                 "/",
                                 "/actuator/health",
                                 "/actuator/info"
@@ -87,20 +101,11 @@ public class SecurityConfig {
                                 "/admin/customers/**"
                         ).hasRole("ADMIN")
 
-                        /*
-                         * Báo cáo Renting chỉ dành cho Admin.
-                         *
-                         * Phải đặt trước /rentings/*
-                         * để tránh bị rule Customer bắt trước.
-                         */
+
                         .pathMatchers(
                                 "/rentings/reports"
                         ).hasRole("ADMIN")
 
-                        /*
-                         * Admin được thêm xe, manufacturer
-                         * và supplier.
-                         */
                         .pathMatchers(
                                 HttpMethod.POST,
                                 "/cars/**",
@@ -108,9 +113,6 @@ public class SecurityConfig {
                                 "/suppliers/**"
                         ).hasRole("ADMIN")
 
-                        /*
-                         * Admin được cập nhật.
-                         */
                         .pathMatchers(
                                 HttpMethod.PUT,
                                 "/cars/**",
@@ -128,40 +130,21 @@ public class SecurityConfig {
                                 "/suppliers/**"
                         ).hasRole("ADMIN")
 
-                        /*
-                         * Customer quản lý profile của mình.
-                         */
                         .pathMatchers(
                                 "/customers/me",
                                 "/customers/me/**"
                         ).hasRole("CUSTOMER")
 
-                        /*
-                         * Customer tạo giao dịch thuê.
-                         */
                         .pathMatchers(
                                 HttpMethod.POST,
                                 "/rentings"
                         ).hasRole("CUSTOMER")
 
-                        /*
-                         * Customer xem lịch sử và
-                         * chi tiết giao dịch của mình.
-                         */
                         .pathMatchers(
                                 "/rentings/history",
                                 "/rentings/*"
                         ).hasRole("CUSTOMER")
 
-                        /*
-                         * Những API còn lại phải có JWT.
-                         *
-                         * Ví dụ:
-                         * GET /cars
-                         * GET /cars/available
-                         * GET /manufacturers
-                         * GET /suppliers
-                         */
                         .anyExchange()
                         .authenticated()
                 )
@@ -180,10 +163,7 @@ public class SecurityConfig {
                 .build();
     }
 
-    /*
-     * Gateway kiểm tra JWT bằng cùng secret
-     * mà Customer Service dùng để ký token.
-     */
+
     @Bean
     public ReactiveJwtDecoder jwtDecoder(
             @Value("${jwt.secret}")

@@ -5,7 +5,7 @@ spring:
   application:
     name: api-gateway
 
-  # Bắt buộc Gateway chạy bằng WebFlux và Reactor Netty
+  # Gateway sử dụng WebFlux và Reactor Netty
   main:
     web-application-type: reactive
 
@@ -14,7 +14,6 @@ spring:
       server:
         webflux:
           routes:
-
             # =====================================
             # CUSTOMER SERVICE
             # =====================================
@@ -39,17 +38,47 @@ spring:
               predicates:
                 - Path=/rentings/**
 
+            # =====================================
+            # OPENAPI - CUSTOMER SERVICE
+            # =====================================
+            - id: customer-service-openapi
+              uri: lb://customer-service
+              predicates:
+                - Path=/customer-service/v3/api-docs,/customer-service/v3/api-docs/**
+              filters:
+                - StripPrefix=1
+
+            # =====================================
+            # OPENAPI - CAR SERVICE
+            # =====================================
+            - id: car-service-openapi
+              uri: lb://car-service
+              predicates:
+                - Path=/car-service/v3/api-docs,/car-service/v3/api-docs/**
+              filters:
+                - StripPrefix=1
+
+            # =====================================
+            # OPENAPI - RENTING SERVICE
+            # =====================================
+            - id: renting-service-openapi
+              uri: lb://renting-service
+              predicates:
+                - Path=/renting-service/v3/api-docs,/renting-service/v3/api-docs/**
+              filters:
+                - StripPrefix=1
+
           httpclient:
             connect-timeout: 3000
             response-timeout: 10s
 
 eureka:
   client:
-    service-url:
-      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
-
     register-with-eureka: true
     fetch-registry: true
+
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
 
   instance:
     prefer-ip-address: true
@@ -69,6 +98,25 @@ management:
     health:
       show-details: always
 
-# Phải giống hoàn toàn secret bên Customer Service
+# Phải giống JWT secret của Customer Service
 jwt:
   secret: ${JWT_SECRET:0123456789012345678901234567890123456789012345678901234567890123}
+
+springdoc:
+  api-docs:
+    enabled: true
+
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    disable-swagger-default-url: true
+
+    urls:
+      - name: Customer Service
+        url: /customer-service/v3/api-docs
+
+      - name: Car Service
+        url: /car-service/v3/api-docs
+
+      - name: Renting Service
+        url: /renting-service/v3/api-docs

@@ -31,6 +31,14 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
 
+                        /*
+                         * Cho API Gateway lấy tài liệu OpenAPI.
+                         */
+                        .requestMatchers(
+                                "/v3/api-docs",
+                                "/v3/api-docs/**"
+                        ).permitAll()
+
                         // API công khai
                         .requestMatchers(
                                 "/auth/register",

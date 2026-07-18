@@ -5,6 +5,7 @@ spring:
   application:
     name: api-gateway
 
+  # Gateway sử dụng WebFlux và Reactor Netty
   main:
     web-application-type: reactive
 
@@ -13,20 +14,59 @@ spring:
       server:
         webflux:
           routes:
+            # =====================================
+            # CUSTOMER SERVICE
+            # =====================================
             - id: customer-service-route
               uri: lb://customer-service
               predicates:
                 - Path=/auth/**,/customers/**,/admin/customers/**
 
+            # =====================================
+            # CAR SERVICE
+            # =====================================
             - id: car-service-route
               uri: lb://car-service
               predicates:
                 - Path=/cars/**,/manufacturers/**,/suppliers/**
 
+            # =====================================
+            # RENTING SERVICE
+            # =====================================
             - id: renting-service-route
               uri: lb://renting-service
               predicates:
                 - Path=/rentings/**
+
+            # =====================================
+            # OPENAPI - CUSTOMER SERVICE
+            # =====================================
+            - id: customer-service-openapi
+              uri: lb://customer-service
+              predicates:
+                - Path=/customer-service/v3/api-docs,/customer-service/v3/api-docs/**
+              filters:
+                - StripPrefix=1
+
+            # =====================================
+            # OPENAPI - CAR SERVICE
+            # =====================================
+            - id: car-service-openapi
+              uri: lb://car-service
+              predicates:
+                - Path=/car-service/v3/api-docs,/car-service/v3/api-docs/**
+              filters:
+                - StripPrefix=1
+
+            # =====================================
+            # OPENAPI - RENTING SERVICE
+            # =====================================
+            - id: renting-service-openapi
+              uri: lb://renting-service
+              predicates:
+                - Path=/renting-service/v3/api-docs,/renting-service/v3/api-docs/**
+              filters:
+                - StripPrefix=1
 
           httpclient:
             connect-timeout: 3000
@@ -58,5 +98,25 @@ management:
     health:
       show-details: always
 
+# Phải giống JWT secret của Customer Service
 jwt:
   secret: ${JWT_SECRET:0123456789012345678901234567890123456789012345678901234567890123}
+
+springdoc:
+  api-docs:
+    enabled: true
+
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    disable-swagger-default-url: true
+
+    urls:
+      - name: Customer Service
+        url: /customer-service/v3/api-docs
+
+      - name: Car Service
+        url: /car-service/v3/api-docs
+
+      - name: Renting Service
+        url: /renting-service/v3/api-docs
