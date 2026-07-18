@@ -5,13 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8b41dbc4-b435-45c8-b29b-3acb5a285d13" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eureka-server/src/main/java/com/fptu/fucarrenting/eurekaserver/EurekaServerApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/eureka-server/src/main/java/com/fptu/fucarrenting/eurekaserver/EurekaServerApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eureka-server/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/eureka-server/src/main/resources/application.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,7 +19,7 @@
     <colors>
       <entry key="42d66ac6-6a64-49e0-b713-56e6620c8ea7" value="Orange" />
       <entry key="741d6fe1-0b7c-4c24-ab75-17a40ba14868" value="Blue" />
-      <entry key="c9a0c854-09f7-41a8-9afc-aeaf09a039ca" value="Green" />
+      <entry key="c9a0c854-09f7-41a8-9afc-aeaf09a039ca" value="Rose" />
       <entry key="dcd1ae3b-544f-4bf9-b3cd-be825210ee79" value="Blue" />
     </colors>
   </component>
@@ -74,6 +71,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Spring Boot.CarServiceApplication.executor": "Run",
     "Spring Boot.CustomerServiceApplication.executor": "Run",
     "Spring Boot.EurekaServerApplication.executor": "Run",
     "codeWithMe.voiceChat.enabledByDefault": "false",
@@ -85,6 +83,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "run.configurations.included.in.services": "true",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
@@ -98,7 +97,37 @@
       <recent name="E:\Ky8\MSS301\mss301-assignment1\fu_car_renting_system_andche186895" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.CustomerServiceApplication">
+  <component name="RunDashboard">
+    <option name="configurationTypes">
+      <set>
+        <option value="KtorApplicationConfigurationType" />
+        <option value="MicronautRunConfigurationType" />
+        <option value="QuarkusRunConfigurationType" />
+        <option value="SpringBootApplicationConfigurationType" />
+      </set>
+    </option>
+    <option name="configurationStatuses">
+      <map>
+        <entry key="SpringBootApplicationConfigurationType">
+          <value>
+            <map>
+              <entry key="CarServiceApplication" value="STOPPED" />
+              <entry key="CustomerServiceApplication" value="STOPPED" />
+              <entry key="EurekaServerApplication" value="STOPPED" />
+            </map>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="RunManager" selected="Spring Boot.CarServiceApplication">
+    <configuration name="CarServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="car-service" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.fptu.fucarrenting.carservice.CarServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="CustomerServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="customer-service" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.fptu.fucarrenting.customerservice.CustomerServiceApplication" />
@@ -132,7 +161,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1784322206123</updated>
-      <workItem from="1784322207138" duration="5724000" />
+      <workItem from="1784322207138" duration="10058000" />
     </task>
     <servers />
   </component>
