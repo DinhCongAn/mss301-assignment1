@@ -5,7 +5,6 @@ spring:
   application:
     name: api-gateway
 
-  # Bắt buộc Gateway chạy bằng WebFlux và Reactor Netty
   main:
     web-application-type: reactive
 
@@ -14,26 +13,16 @@ spring:
       server:
         webflux:
           routes:
-
-            # =====================================
-            # CUSTOMER SERVICE
-            # =====================================
             - id: customer-service-route
               uri: lb://customer-service
               predicates:
                 - Path=/auth/**,/customers/**,/admin/customers/**
 
-            # =====================================
-            # CAR SERVICE
-            # =====================================
             - id: car-service-route
               uri: lb://car-service
               predicates:
                 - Path=/cars/**,/manufacturers/**,/suppliers/**
 
-            # =====================================
-            # RENTING SERVICE
-            # =====================================
             - id: renting-service-route
               uri: lb://renting-service
               predicates:
@@ -45,15 +34,15 @@ spring:
 
 eureka:
   client:
-    service-url:
-      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
-
     register-with-eureka: true
     fetch-registry: true
 
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka/
+
   instance:
-    prefer-ip-address: true
-    ip-address: ${EUREKA_INSTANCE_IP:127.0.0.1}
+    prefer-ip-address: false
+    hostname: api-gateway
     instance-id: ${spring.application.name}:${server.port}
 
     lease-renewal-interval-in-seconds: 10
@@ -69,6 +58,5 @@ management:
     health:
       show-details: always
 
-# Phải giống hoàn toàn secret bên Customer Service
 jwt:
   secret: ${JWT_SECRET:0123456789012345678901234567890123456789012345678901234567890123}

@@ -6,7 +6,7 @@ spring:
     name: car-service
 
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5434/car_db}
+    url: jdbc:postgresql://car-db:5432/car_db
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:root}
 
@@ -23,15 +23,15 @@ spring:
 
 eureka:
   client:
-    service-url:
-      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
-
     register-with-eureka: true
     fetch-registry: true
 
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka/
+
   instance:
-    prefer-ip-address: true
-    ip-address: ${EUREKA_INSTANCE_IP:127.0.0.1}
+    prefer-ip-address: false
+    hostname: car-service
     instance-id: ${spring.application.name}:${server.port}
 
     lease-renewal-interval-in-seconds: 10

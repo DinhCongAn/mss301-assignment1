@@ -6,15 +6,17 @@ spring:
     name: customer-service
 
   datasource:
-    url: jdbc:postgresql://localhost:5433/customer_db
-    username: root
-    password: root
+    url: ${DB_URL:jdbc:postgresql://localhost:5433/customer_db}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:root}
 
   jpa:
     hibernate:
       ddl-auto: update
+
     show-sql: true
     open-in-view: false
+
     properties:
       hibernate:
         format_sql: true
@@ -22,13 +24,34 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
+
+    register-with-eureka: true
+    fetch-registry: true
+
+  instance:
+    prefer-ip-address: true
+    ip-address: ${EUREKA_INSTANCE_IP:127.0.0.1}
+    instance-id: ${spring.application.name}:${server.port}
+
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 30
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+  endpoint:
+    health:
+      show-details: always
 
 app:
+  jwt:
+    secret: ${JWT_SECRET:0123456789012345678901234567890123456789012345678901234567890123}
+    expiration-seconds: ${JWT_EXPIRATION_SECONDS:3600}
+
   admin:
     email: ${ADMIN_EMAIL:admin@example.com}
     password: ${ADMIN_PASSWORD:admin}
-
-  jwt:
-    secret: ${JWT_SECRET:fu-car-renting-system-secret-key-andche186895-2026}
-    expiration-seconds: 86400

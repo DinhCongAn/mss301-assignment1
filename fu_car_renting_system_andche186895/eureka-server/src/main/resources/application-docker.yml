@@ -7,17 +7,13 @@ spring:
 
 eureka:
   client:
-    # Eureka Server không tự đăng ký chính nó
     register-with-eureka: false
-
-    # Eureka Server không cần lấy danh sách service
     fetch-registry: false
 
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://eureka-server:8761/eureka/
 
   server:
-    # Phù hợp môi trường phát triển local
     enable-self-preservation: false
 
 management:

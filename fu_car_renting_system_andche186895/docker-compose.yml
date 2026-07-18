@@ -1,56 +1,288 @@
 services:
+
+  # ==================================================
+  # EUREKA SERVER
+  # ==================================================
+  eureka-server:
+    build:
+      context: ./eureka-server
+      dockerfile: Dockerfile
+
+    container_name: eureka-server
+
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+    ports:
+      - "8761:8761"
+
+    networks:
+      - fu-car-network
+
+    restart: unless-stopped
+
+
+  # ==================================================
+  # CUSTOMER DATABASE
+  # ==================================================
   customer-db:
     image: postgres:17-alpine
+
     container_name: customer-db
+
     environment:
+      POSTGRES_DB: customer_db
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
-      POSTGRES_DB: customer_db
+
     ports:
       - "5433:5432"
+
     volumes:
       - customer-db-data:/var/lib/postgresql/data
+
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U root -d customer_db" ]
+      test: ["CMD-SHELL", "pg_isready -U root -d customer_db"]
       interval: 5s
       timeout: 5s
-      retries: 10
+      retries: 15
 
+    networks:
+      - fu-car-network
+
+    restart: unless-stopped
+
+
+  # ==================================================
+  # CAR DATABASE
+  # ==================================================
   car-db:
     image: postgres:17-alpine
+
     container_name: car-db
+
     environment:
+      POSTGRES_DB: car_db
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
-      POSTGRES_DB: car_db
+
     ports:
       - "5434:5432"
+
     volumes:
       - car-db-data:/var/lib/postgresql/data
+
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U root -d car_db" ]
+      test: ["CMD-SHELL", "pg_isready -U root -d car_db"]
       interval: 5s
       timeout: 5s
-      retries: 10
+      retries: 15
 
+    networks:
+      - fu-car-network
+
+    restart: unless-stopped
+
+
+  # ==================================================
+  # RENTAL DATABASE
+  # ==================================================
   rental-db:
     image: postgres:17-alpine
+
     container_name: rental-db
+
     environment:
+      POSTGRES_DB: rental_db
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
-      POSTGRES_DB: rental_db
+
     ports:
       - "5435:5432"
+
     volumes:
       - rental-db-data:/var/lib/postgresql/data
+
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U root -d rental_db" ]
+      test: ["CMD-SHELL", "pg_isready -U root -d rental_db"]
       interval: 5s
       timeout: 5s
-      retries: 10
+      retries: 15
 
+    networks:
+      - fu-car-network
+
+    restart: unless-stopped
+
+
+  # ==================================================
+  # CUSTOMER SERVICE
+  # ==================================================
+  customer-service:
+    build:
+      context: ./customer-service
+      dockerfile: Dockerfile
+
+    container_name: customer-service
+
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+      DB_URL: jdbc:postgresql://customer-db:5432/customer_db
+      DB_USERNAME: root
+      DB_PASSWORD: root
+
+      EUREKA_URL: http://eureka-server:8761/eureka/
+
+      JWT_SECRET: ${JWT_SECRET:-0123456789012345678901234567890123456789012345678901234567890123}
+      JWT_EXPIRATION_SECONDS: 3600
+
+      ADMIN_EMAIL: admin@example.com
+      ADMIN_PASSWORD: admin
+
+    depends_on:
+      customer-db:
+        condition: service_healthy
+
+      eureka-server:
+        condition: service_started
+
+    expose:
+      - "8081"
+
+    networks:
+      - fu-car-network
+
+    restart: unless-stopped
+
+
+  # ==================================================
+  # CAR SERVICE
+  # ==================================================
+  car-service:
+    build:
+      context: ./car-service
+      dockerfile: Dockerfile
+
+    container_name: car-service
+
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+      DB_URL: jdbc:postgresql://car-db:5432/car_db
+      DB_USERNAME: root
+      DB_PASSWORD: root
+
+      EUREKA_URL: http://eureka-server:8761/eureka/
+
+    depends_on:
+      car-db:
+        condition: service_healthy
+
+      eureka-server:
+        condition: service_started
+
+    expose:
+      - "8082"
+
+    networks:
+      - fu-car-network
+
+    restart: unless-stopped
+
+
+  # ==================================================
+  # RENTING SERVICE
+  # ==================================================
+  renting-service:
+    build:
+      context: ./renting-service
+      dockerfile: Dockerfile
+
+    container_name: renting-service
+
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+      DB_URL: jdbc:postgresql://rental-db:5432/rental_db
+      DB_USERNAME: root
+      DB_PASSWORD: root
+
+      EUREKA_URL: http://eureka-server:8761/eureka/
+
+    depends_on:
+      rental-db:
+        condition: service_healthy
+
+      eureka-server:
+        condition: service_started
+
+      customer-service:
+        condition: service_started
+
+      car-service:
+        condition: service_started
+
+    expose:
+      - "8083"
+
+    networks:
+      - fu-car-network
+
+    restart: unless-stopped
+
+
+  # ==================================================
+  # API GATEWAY
+  # ==================================================
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+
+    container_name: api-gateway
+
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+      EUREKA_URL: http://eureka-server:8761/eureka/
+
+      JWT_SECRET: ${JWT_SECRET:-0123456789012345678901234567890123456789012345678901234567890123}
+
+    depends_on:
+      eureka-server:
+        condition: service_started
+
+      customer-service:
+        condition: service_started
+
+      car-service:
+        condition: service_started
+
+      renting-service:
+        condition: service_started
+
+    ports:
+      - "8080:8080"
+
+    networks:
+      - fu-car-network
+
+    restart: unless-stopped
+
+
+# ==================================================
+# DATABASE VOLUMES
+# ==================================================
 volumes:
   customer-db-data:
   car-db-data:
   rental-db-data:
+
+
+# ==================================================
+# DOCKER NETWORK
+# ==================================================
+networks:
+  fu-car-network:
+    driver: bridge
